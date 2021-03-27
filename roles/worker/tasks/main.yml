@@ -1,0 +1,3 @@
+---
+- name: Join cluster
+  shell: "{{ hostvars['K8S_HOLDER']['command'] }}"

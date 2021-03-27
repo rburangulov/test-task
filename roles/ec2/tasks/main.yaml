@@ -1,0 +1,61 @@
+- name: Deploy k8s master
+  amazon.aws.ec2:
+    key_name: "{{ aws_ssh_key_name }}"
+    region: "{{ aws_region }}"
+    instance_type: t2.medium
+    image: ami-01e78c5619c5e68b4
+    wait: yes
+    wait_timeout: 500
+    count: 1
+    monitoring: yes
+    vpc_subnet_id: "{{ aws_subnet_id }}"
+    assign_public_ip: yes
+    instance_tags:
+      Name: k8s-master
+  register: ec2_k8s_master
+
+- name: Add master to inventory
+  add_host:
+    name: k8s-master
+    ansible_host: '{{ ec2_k8s_master.instances[0].public_ip }}'
+    ansible_ssh_user: ec2-user
+
+- name: Wait for SSH to become available
+  wait_for:
+    port: 22
+    host: "{{ ec2_k8s_master.instances[0].public_ip }}"
+    search_regex: OpenSSH
+    delay: 10
+  vars:
+    ansible_connection: local
+
+- name: Deploy k8s worker
+  amazon.aws.ec2:
+    key_name: "{{ aws_ssh_key_name }}"
+    region: "{{ aws_region }}"
+    instance_type: t2.medium
+    image: ami-01e78c5619c5e68b4
+    wait: yes
+    wait_timeout: 500
+    count: 1
+    monitoring: yes
+    vpc_subnet_id: "{{ aws_subnet_id }}"
+    assign_public_ip: yes
+    instance_tags:
+      Name: k8s-worker
+  register: ec2_k8s_worker
+
+- name: Add master to inventory
+  add_host:
+    name: k8s-worker
+    ansible_host: '{{ ec2_k8s_worker.instances[0].public_ip }}'
+    ansible_ssh_user: ec2-user
+
+- name: Wait for SSH to become available
+  wait_for:
+    port: 22
+    host: "{{ ec2_k8s_worker.instances[0].public_ip }}"
+    search_regex: OpenSSH
+    delay: 10
+  vars:
+    ansible_connection: local

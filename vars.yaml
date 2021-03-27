@@ -1,0 +1,3 @@
+aws_region: us-west-2
+aws_ssh_key_name: work
+aws_subnet_id: subnet-01de771d35308853e

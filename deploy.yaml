@@ -1,0 +1,74 @@
+- name: Deploy ec2 instances
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars.yaml
+  roles:
+    - ec2
+
+- name: Change master hostname
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  tasks:
+  - hostname:
+      name: "k8s-master"
+
+- name: Change worker hostname
+  hosts: k8s-worker
+  become: yes
+  become_method: sudo
+  tasks:
+  - hostname:
+      name: "k8s-worker"
+
+- name: Disable swap
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - swap
+
+- name: Install docker, kubernetes and additional programs
+  hosts: all
+  become: yes
+  become_method: sudo
+  roles:
+    - required-software
+    - docker
+    - kubernetes
+
+- name: Create etcd cluster
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - etcd-init
+
+- name: Init cluster
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - master-init
+
+- name: Get token
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - get-token
+
+- name: Install weavenet
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - weavenet
+
+- name: Add worker to cluster
+  hosts: k8s-worker
+  become: yes
+  become_method: sudo
+  roles:
+    - worker
