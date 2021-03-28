@@ -18,4 +18,5 @@ spec:
       containers:
       - name: producer
         image: kafka-producer:latest
+        imagePullPolicy: Never
 

@@ -18,4 +18,5 @@ spec:
       containers:
       - name: consumer
         image: kafka-consumer:latest
+        imagePullPolicy: Never
 
