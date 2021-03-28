@@ -1,0 +1,15 @@
+---
+- name: Copy consumer.dockerfile
+  copy:
+    src: "{{ role_path }}/files/consumer.dockerfile"
+    dest: /root/consumer.dockerfile
+
+- name: Copy consumer.py
+  copy:
+    src: src/consumer.py
+    dest: /root/consumer.py
+
+- name: Build docker image
+  command: docker build -f consumer.dockerfile -t kafka-consumer:latest .
+  args:
+    chdir: /root

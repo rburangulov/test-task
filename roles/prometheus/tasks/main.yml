@@ -1,0 +1,15 @@
+- name: Copy prometheus-operator.yaml
+  template:
+    src: "{{ role_path }}/files/prometheus-operator.yaml"
+    dest: /root/prometheus-operator.yaml
+
+- name: Deploy prometheus-operator
+  command: kubectl apply -f /root/prometheus-operator.yaml
+
+- name: Copy prometheus.yaml
+  template:
+    src: "{{ role_path }}/files/prometheus.yaml"
+    dest: /root/prometheus.yaml
+
+- name: Install prometheus
+  command: kubectl apply -f /root/prometheus.yaml

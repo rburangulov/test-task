@@ -1,0 +1,8 @@
+---
+- name: Copy kafka.yaml
+  template:
+    src: "{{ role_path }}/files/kafka.yaml"
+    dest: /root/kafka.yaml
+
+- name: Install kafka
+  command: kubectl apply -f /root/kafka.yaml

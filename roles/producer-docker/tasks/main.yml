@@ -1,0 +1,15 @@
+---
+- name: Copy producer.dockerfile
+  copy:
+    src: "{{ role_path }}/files/producer.dockerfile"
+    dest: /root/producer.dockerfile
+
+- name: Copy producer.py
+  copy:
+    src: src/producer.py
+    dest: /root/producer.py
+
+- name: Build docker image
+  command: docker build -f producer.dockerfile -t kafka-producer:latest .
+  args:
+    chdir: /root

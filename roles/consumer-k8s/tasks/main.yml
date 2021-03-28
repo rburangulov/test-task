@@ -1,0 +1,8 @@
+---
+- name: Copy consumer.yaml
+  template:
+    src: "{{ role_path }}/files/consumer.yaml"
+    dest: /root/consumer.yaml
+
+- name: Deploy consumer
+  command: kubectl apply -f /root/consumer.yaml

@@ -72,3 +72,39 @@
   become_method: sudo
   roles:
     - worker
+
+- name: Deploy kafka
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - kafka
+
+- name: Build producer docker image
+  hosts: k8s-worker
+  become: yes
+  become_method: sudo
+  roles:
+    - producer-docker 
+
+- name: Build consumer docker image
+  hosts: k8s-worker
+  become: yes
+  become_method: sudo
+  roles:
+    - consumer-docker 
+
+- name: Deploy producer
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - producer-k8s
+
+- name: Deploy consumer
+  hosts: k8s-master
+  become: yes
+  become_method: sudo
+  roles:
+    - consumer-k8s
+

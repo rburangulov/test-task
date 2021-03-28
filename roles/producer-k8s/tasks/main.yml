@@ -1,0 +1,8 @@
+---
+- name: Copy producer.yaml
+  template:
+    src: "{{ role_path }}/files/producer.yaml"
+    dest: /root/producer.yaml
+
+- name: Deploy producer
+  command: kubectl apply -f /root/producer.yaml
