@@ -17,6 +17,7 @@ spec:
   selector:
     matchLabels:
       app: zookeper
+  serviceName: "zookeper"
   template:
     metadata:
       labels:
@@ -61,6 +62,7 @@ spec:
   selector:
     matchLabels:
       app: backend
+  serviceName: "kafka"
   template:
     metadata:
       labels:
