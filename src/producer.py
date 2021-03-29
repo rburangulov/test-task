@@ -4,5 +4,5 @@ import time
 producer = KafkaProducer(bootstrap_servers='kafka-service:9092')
 
 while True:
-    producer.send('input', 'Hello, World!')
+    producer.send('input', b'Hello, World!')
     time.sleep(5)
