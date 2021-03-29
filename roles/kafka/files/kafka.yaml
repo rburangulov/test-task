@@ -67,7 +67,6 @@ spec:
     protocol: TCP
   selector:
     app: kafka-broker-1
-  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: StatefulSet
