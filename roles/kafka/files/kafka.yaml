@@ -30,7 +30,7 @@ spec:
         - name: ZOOKEEPER_ID
           value: "1"
         - name: ZOOKEEPER_SERVER_1
-          value: zoo1
+          value: zookeper
 ---
 apiVersion: v1
 kind: Service
@@ -75,7 +75,7 @@ spec:
         - name: KAFKA_ADVERTISED_PORT
           value: "9092"
         - name: KAFKA_ADVERTISED_HOST_NAME
-          value: "kafka1"
+          value: "kafka"
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: zookeeper:2181
         - name: KAFKA_CREATE_TOPICS
