@@ -6,4 +6,4 @@ RUN pip install kafka-python
 
 COPY producer.py ./
 
-CMD [ "python", "./producer.py" ]
+CMD [ "python","-u","./producer.py" ]
