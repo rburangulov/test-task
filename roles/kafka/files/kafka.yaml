@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: "test-taks"
-  labels:
-    name: "test-task"
+  name: "test-task"
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -46,7 +44,7 @@ spec:
   - port: 2181
     targetPort: 2181
     protocol: TCP
-    name: 2181
+    name: port
   selector:
     app: zookeper
 ---
@@ -103,6 +101,6 @@ spec:
   - port: 9092
     targetPort: 9092
     protocol: TCP
-    name: 9092
+    name: port
   selector:
     app: kafka
