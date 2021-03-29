@@ -6,4 +6,4 @@ RUN pip install kafka-python
 
 COPY consumer.py ./
 
-CMD [ "python", "./consumer.py" ]
+CMD [ "python","-u","./consumer.py" ]
