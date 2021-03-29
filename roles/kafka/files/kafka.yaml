@@ -56,7 +56,7 @@ metadata:
   name: kafka-broker0
   namespace: test-task
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
         app: kafka
