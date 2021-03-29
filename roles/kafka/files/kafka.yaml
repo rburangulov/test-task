@@ -3,23 +3,20 @@ kind: Namespace
 metadata:
   name: "test-task"
 ---
+kind: Deployment
 apiVersion: apps/v1
-kind: StatefulSet
 metadata:
-  name: zookeeper
+  name: zookeeper-deploy
   namespace: test-task
-  labels:
-    app: zookeper
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: zookeper
-  serviceName: "zookeper"
+      app: zookeeper-1
   template:
     metadata:
       labels:
-        app: zookeper
+        app: zookeeper-1
     spec:
       containers:
       - name: zoo1
@@ -28,66 +25,64 @@ spec:
         - containerPort: 2181
         env:
         - name: ZOOKEEPER_ID
-          value: 1
+          value: "1"
         - name: ZOOKEEPER_SERVER_1
-          value: zookeper
+          value: zoo1
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeper-service
+  name: zoo1
   namespace: test-task
   labels:
-    app: zookeeper
+    app: zookeeper-1
 spec:
   ports:
-  - port: 2181
-    targetPort: 2181
+  - name: client
+    port: 2181
     protocol: TCP
-    name: port
+  - name: follower
+    port: 2888
+    protocol: TCP
+  - name: leader
+    port: 3888
+    protocol: TCP
   selector:
-    app: zookeper
+    app: zookeeper-1
 ---
+kind: Deployment
 apiVersion: apps/v1
-kind: StatefulSet
 metadata:
-  name: kafka
+  name: kafka-broker0
   namespace: test-task
-  labels:
-    app: kafka
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: backend
-  serviceName: "kafka"
+        app: kafka
+        id: "0"
   template:
     metadata:
       labels:
-        app: backend
+        app: kafka
+        id: "0"
     spec:
       containers:
       - name: kafka
-        image: wurstmeister/kafka:2.11-2.0.1
+        image: wurstmeister/kafka
         ports:
         - containerPort: 9092
         env:
         - name: KAFKA_ADVERTISED_PORT
-          value: 9092
+          value: "30718"
         - name: KAFKA_ADVERTISED_HOST_NAME
-          value: kafka-service
+          value: 192.168.1.240
         - name: KAFKA_ZOOKEEPER_CONNECT
-          value: zookeeper:2181
-        - name: KAFKA_CREATE_TOPICS
-          value: "input:1:1,output:1:1"
-        - name: KAFKA_LOG_DIRS
-          value: /kafka/kafka-logs
+          value: zoo1:2181
         - name: KAFKA_BROKER_ID
-          value: 1
-        - name: KAFKA_JMX_PORT
-          value: 5555
-        - name: KAFKA_CLEANUP_POLICY
-          value: compact
+          value: "0"
+        - name: KAFKA_CREATE_TOPICS
+          value: admintome-test:1:1
 ---
 apiVersion: v1
 kind: Service
@@ -95,12 +90,13 @@ metadata:
   name: kafka-service
   namespace: test-task
   labels:
-    app: kafka
+    name: kafka
 spec:
   ports:
   - port: 9092
-    targetPort: 9092
+    name: kafka-port
     protocol: TCP
-    name: port
   selector:
     app: kafka
+    id: "0"
+  type: LoadBalancer
