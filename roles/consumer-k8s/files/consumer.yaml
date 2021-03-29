@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: consumer 
-  namespace: kafka
+  namespace: test-task
   labels:
     app: consumer
 spec:
